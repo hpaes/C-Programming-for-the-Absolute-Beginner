@@ -1,82 +1,85 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-// function prototypes
 int showMenu();
 
 int main(void)
 {
-    // variable declaration
-    char *cPhoneBook_name = (char *) calloc(1, 80 * sizeof(char));
     int *iPhoneBook_number = (int *) calloc(1, sizeof(int));
+    char *cPhoneBook_name = (char *) calloc(1, 80 * sizeof(char));
     int iOpt = 0;
     int iContacts = 0;
-    int iModifyUser = 0;
-    
+    int iModifyContact = 0;
 
     do
-    {   
-        // Memory check
+    {
+        // check if memory is available
         if (iPhoneBook_number == NULL || cPhoneBook_name == NULL)
         {
             printf("\nOut of Memory!\n");
             return 1;
         }
-
-        // Show menu
-        iOpt = 0;
         iOpt = showMenu();
-        
+
         switch (iOpt)
         {
             case 1:
-                // Add Contact
-                printf("\nEnter Name: ");
+                // Add new contact
+                printf("\nEnter name: ");
                 scanf(" %s", &cPhoneBook_name[80 * iContacts]);
-                printf("\nEnter Number: ");
+                printf("\nEnter number: ");
                 scanf(" %d", &iPhoneBook_number[iContacts]);
-                cPhoneBook_name = realloc(cPhoneBook_name, (iContacts + 1) * 80 * sizeof(char));
+                cPhoneBook_name = realloc(cPhoneBook_name, (iContacts + 1) * sizeof(char) * 80);
                 iPhoneBook_number = realloc(iPhoneBook_number, (iContacts + 1) * sizeof(int));
                 iContacts++;
                 break;
 
             case 2:
                 // Modify contact
-                printf("\nEnter contact number to change: \n");
-                scanf(" %d", &iModifyUser);
-                printf("\nEnter name: ");
-                scanf(" %s", &cPhoneBook_name[80 * (iModifyUser - 1)]);
-                printf("\nEnter number: ");
-                scanf(" %d", &iPhoneBook_number[iModifyUser - 1]);
+                printf("\nEnter contact number to change: ");
+                scanf("%d", &iModifyContact);
+                printf("\nEnter new name: ");
+                scanf(" %s", &cPhoneBook_name[80 * (iModifyContact - 1)]);
+                printf("\nEnter new number: ");
+                scanf(" %d", &iPhoneBook_number[iModifyContact - 1]);
                 break;
             
             case 3:
-                // Show Contacts
-                for (int i = 0; i < iContacts; i++)
+                // show contacts
+                if (*iPhoneBook_number == 0)
                 {
-                    printf("\n%d. %s %d\n", i+1, &cPhoneBook_name[i * 80], iPhoneBook_number[i]);
+                    printf("\nYour list is empty\n");
+                    break;
+                }
+
+                for (int i = 0; i < iContacts; i++)
+                {  
+                        printf("\n%d.\t%s\t%d\n", i + 1, &cPhoneBook_name[i * 80], iPhoneBook_number[i]);                    
                 }
                 break;
+
         }   // end switch
-        
 
-    } while (iOpt != 4);    // end do while
+    } while (iOpt != 4);
 
+    // free memory
     free(cPhoneBook_name);
     free(iPhoneBook_number);
-    return 0;
+    
+    return 0; 
 }   // end main
 
 int showMenu()
-{   
+{
     int iOpt = 0;
-
-    printf("\tPhoneBook\n");
-    printf("\n========================\n");
-    printf("1\tAdd new contact\n2\tModify contact\n3\tShow contacts\n4\tExit PhoneBook");
-    printf("\n========================\n");
-    printf(":>");
+    printf("\n\tPhone Book\n");
+    printf("======================\n");
+    printf("1\tAdd new number\n2\tModify contact\n3\tShow contacts\n4\tQuit\n");
+    printf("======================\n");
+    printf(":> ");
     scanf(" %d", &iOpt);
-    
+
     return iOpt;
-}
+
+}   // end of showMenu() function
